@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled>
+                <constant>true</constant>
+            </handled>
+            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>500</constant>
+            </setHeader>
+            <setBody>
+                <simple>{ "msg": "${exception.message}" }\n</simple>
+            </setBody>
+        </onException>
+        <restConfiguration apiComponent="swagger"
+            apiContextPath="/api-docs" component="servlet"
+            contextPath="/camel" enableCORS="true" host="0.0.0.0" port="8080">
+            <dataFormatProperty key="prettyPrint" value="true"/>
+            <!-- 設定可能なapiProperty一覧は、Swaggerドキュメントを参照 -->
+            <!-- http://swagger.io/specification/#infoObject -->
+            <apiProperty key="api.title" value="My REST API"/>
+            <apiProperty key="api.version" value="1.0.0"/>
+            <apiProperty key="api.description" value="APIドキュメントのデモ"/>
+            <apiProperty key="api.contact.name" value="フェン　ジン"/>
+            <apiProperty key="api.contact.email" value="jfeng@redhat.com"/>
+        </restConfiguration>
+        <rest bindingMode="off" id="rest-1" path="/restsvc">
+            <description>sample rest service</description>
+            <get id="get-1" uri="/ping">
+                <description>This is ping service</description>
+                <responseMessage code="200"
+                    message="要求情報が正常に処理され、HelloメッセージがJSON形式で返す" responseModel="org.mycompany.ResponseInfo"/>
+                <responseMessage code="500"
+                    message="要求情報に問題がないが、サーバ側で処理異常のため、ErrorメッセージがJSON形式で返す" responseModel="org.mycompany.ErrorInfo"/>
+                <route>
+                    <to uri="direct:hello"/>
+                </route>
+            </get>
+        </rest>
+        <route id="simple-route">
+            <from id="_from1" uri="direct:hello"/>
+            <setBody id="_setBody1">
+                <simple>{ "msg": "Hello World from camel-context.xml"}\n</simple>
+            </setBody>
+            <log id="route-log" message=">>> ${body}"/>
+        </route>
+    </camelContext>
+</beans>
