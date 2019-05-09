@@ -26,7 +26,7 @@
 
 	http://localhost:8080/webjars/swagger-ui/3.22.0/index.html?url=/camel/api-docs
 
-![swagger-ui](Swagger UI.png)
+![swagger-ui](swagger-ui.png)
 
 ## 設定方法
 
