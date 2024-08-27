@@ -16,7 +16,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 		<!-- <swagger.ui.version>2.1.0</swagger.ui.version> -->
-		<swagger.ui.version>3.22.0</swagger.ui.version>
+		<swagger.ui.version>3.23.11</swagger.ui.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
